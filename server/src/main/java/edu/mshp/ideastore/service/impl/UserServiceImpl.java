@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String create(String login, String email, String password) {
-        List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email)
+        List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email);
         if (users.size() > 0) {
             throw new BadRequestException("User with given credentials already created");
         }
