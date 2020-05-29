@@ -31,9 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String create(String login, String email, String password) {
-        log.info("Finding users");
-        List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email);
-        log.info("List loaded");
+        List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email)
         if (users.size() > 0) {
             throw new BadRequestException("User with given credentials already created");
         }
@@ -47,13 +45,9 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Password is invalid. The length must be bigger than 8 and smaller than 120 symbols. Use digits and characters from latin script");
         }
 
-        log.info("Yes!");
-
         User user = new User(login, email, password);
         userCrudRepository.save(user);
-        log.info("maybe here!");
         JWTToken token = new JWTToken(user);
-        log.info("or here!");
         return token.createToken();
     }
 
