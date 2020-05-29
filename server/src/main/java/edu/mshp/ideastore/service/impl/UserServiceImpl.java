@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         return now.after(jwtToken.getIssued()) && now.before(jwtToken.getExpiration());
     }
 
-    private String removeTokenPrefix(String token) {
+    public String removeTokenPrefix(String token) {
         return token.substring(7);
     }
 
