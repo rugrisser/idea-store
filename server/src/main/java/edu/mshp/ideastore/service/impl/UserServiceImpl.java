@@ -30,6 +30,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User get(Long id) {
+        Optional<User> userOptional = userCrudRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+        return userOptional.get();
+    }
+
+    @Override
     public String create(String login, String email, String password) {
         List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email);
         if (users.size() > 0) {
