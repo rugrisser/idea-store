@@ -7,6 +7,7 @@ import edu.mshp.ideastore.model.User;
 import edu.mshp.ideastore.module.jwt.JWTToken;
 import edu.mshp.ideastore.respository.UserCrudRepository;
 import edu.mshp.ideastore.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.BadPaddingException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserCrudRepository userCrudRepository;
@@ -29,7 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String create(String login, String email, String password) {
+        log.info("Finding users");
         List<User> users = userCrudRepository.findAllByLoginOrEmail(login, email);
+        log.info("List loaded");
         if (users.size() > 0) {
             throw new BadRequestException("User with given credentials already created");
         }
@@ -43,10 +47,13 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Password is invalid. The length must be bigger than 8 and smaller than 120 symbols. Use digits and characters from latin script");
         }
 
+        log.info("Yes!");
+
         User user = new User(login, email, password);
         userCrudRepository.save(user);
+        log.info("maybe here!");
         JWTToken token = new JWTToken(user);
-
+        log.info("or here!");
         return token.createToken();
     }
 
