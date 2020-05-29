@@ -7,6 +7,7 @@ import edu.mshp.ideastore.model.User;
 import edu.mshp.ideastore.module.jwt.JWTToken;
 import edu.mshp.ideastore.respository.UserCrudRepository;
 import edu.mshp.ideastore.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.BadPaddingException;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserCrudRepository userCrudRepository;
@@ -46,7 +48,6 @@ public class UserServiceImpl implements UserService {
         User user = new User(login, email, password);
         userCrudRepository.save(user);
         JWTToken token = new JWTToken(user);
-
         return token.createToken();
     }
 
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
         return now.after(jwtToken.getIssued()) && now.before(jwtToken.getExpiration());
     }
 
-    private String removeTokenPrefix(String token) {
+    public String removeTokenPrefix(String token) {
         return token.substring(7);
     }
 

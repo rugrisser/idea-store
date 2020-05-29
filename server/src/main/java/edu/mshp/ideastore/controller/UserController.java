@@ -1,5 +1,6 @@
 package edu.mshp.ideastore.controller;
 
+import edu.mshp.ideastore.exception.BadRequestException;
 import edu.mshp.ideastore.module.ReturnStructures;
 import edu.mshp.ideastore.service.UserService;
 import edu.mshp.ideastore.service.impl.UserServiceImpl;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(
+    public ResponseEntity<?> create(
             @RequestParam String login,
             @RequestParam String email,
             @RequestParam String password
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity login(
+    public ResponseEntity<?> login(
             @RequestParam String login,
             @RequestParam String password
     ) {
@@ -51,8 +52,8 @@ public class UserController {
     @PutMapping("/changePassword")
     public ResponseEntity changePassword(
             @RequestHeader("Authorization") String token,
-            @RequestParam(name = "old") String oldPassword,
-            @RequestParam(name = "new") String newPassword
+            @RequestParam(value = "old") String oldPassword,
+            @RequestParam(value = "new") String newPassword
     ) {
         userService.changePassword(token, oldPassword, newPassword);
         return ResponseEntity.ok(ReturnStructures.returnStatusOk());
