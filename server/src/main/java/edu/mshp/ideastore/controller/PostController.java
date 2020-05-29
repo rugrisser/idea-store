@@ -24,19 +24,19 @@ public class PostController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity get() {
+    public ResponseEntity<?> get() {
         return ResponseEntity.ok(postService.get());
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity get(
+    public ResponseEntity<?> get(
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(postService.get(id));
     }
 
     @PostMapping("/create")
-    public ResponseEntity create(
+    public ResponseEntity<?> create(
             @RequestHeader("Authorization") String token,
             @RequestParam String title,
             @RequestParam String body,
@@ -50,7 +50,7 @@ public class PostController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity delete(
+    public ResponseEntity<?> delete(
             @RequestHeader("Authorization") String token,
             @PathVariable Long id
     ) {
