@@ -30,6 +30,8 @@ public class JWTToken {
     /** ID пользователя */
     @Getter
     private static Long id;
+    /** Логин пользователя */
+    private static String login;
     /** E-Mail пользователя */
     @Getter
     private static String email;
@@ -46,6 +48,7 @@ public class JWTToken {
      */
     public JWTToken(User user) {
         id = user.getId();
+        login = user.getLogin();
         email = user.getEmail();
         issued = new Date();
         expiration = new Date(issued.getTime() + LIFETIME);
@@ -71,8 +74,9 @@ public class JWTToken {
         }
 
         Claims body = (Claims) Jwts.parser().setSigningKey(SECRET).parse(token).getBody();
-        email = body.getSubject();
+        login = body.getSubject();
         id = Long.valueOf((Integer) body.get("id"));
+        email = (String) body.get("email");
         issued = body.getIssuedAt();
         expiration = body.getExpiration();
     }
@@ -96,8 +100,9 @@ public class JWTToken {
         expiration = new Date(issued.getTime() + LIFETIME);
 
         Claims claims = Jwts.claims();
-        claims.setSubject(email);
+        claims.setSubject(login);
         claims.put("id", id);
+        claims.put("email", email);
         claims.setIssuedAt(issued);
         claims.setExpiration(expiration);
 

@@ -1,0 +1,41 @@
+package edu.mshp.ideastore.controller;
+
+import edu.mshp.ideastore.service.UserService;
+import edu.mshp.ideastore.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(
+            UserServiceImpl userService
+    ) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity create(
+            @RequestParam String login,
+            @RequestParam String email,
+            @RequestParam String password
+    ) {
+        Map<String, Object> result = new HashMap<>();
+        String token = userService.create(login, email, password);
+        result.put("token", token);
+
+        return ResponseEntity.ok(result);
+    }
+
+}
