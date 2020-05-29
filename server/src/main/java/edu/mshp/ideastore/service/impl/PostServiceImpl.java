@@ -81,6 +81,27 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(String token, Long id) {
+        if (userService.validate(token)) {
+            token = userService.removeTokenPrefix(token);
+            JWTToken jwtToken = null;
+            try {
+                jwtToken = new JWTToken(token);
+            } catch (BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
+                throw new ForbiddenException("Token is invalid");
+            }
 
+            Optional<Post> postOptional = postCrudRepository.findById(id);
+            if (postOptional.isEmpty()) {
+                throw new NotFoundException("Post with id " + id + " not found");
+            }
+            Post post = postOptional.get();
+
+            if (!post.getUser().getId().equals(jwtToken.getId())) {
+                throw new ForbiddenException("You cannot delete this post");
+            }
+            postCrudRepository.delete(post);
+        } else {
+            throw new ForbiddenException("Token is invalid");
+        }
     }
 }

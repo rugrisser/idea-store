@@ -48,4 +48,13 @@ public class PostController {
 
         return ResponseEntity.ok(result);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity delete(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long id
+    ) {
+        postService.delete(token, id);
+        return ResponseEntity.ok("");
+    }
 }
