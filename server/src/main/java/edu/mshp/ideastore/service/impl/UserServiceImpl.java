@@ -1,6 +1,7 @@
 package edu.mshp.ideastore.service.impl;
 
 import edu.mshp.ideastore.exception.BadRequestException;
+import edu.mshp.ideastore.exception.NotFoundException;
 import edu.mshp.ideastore.model.User;
 import edu.mshp.ideastore.module.jwt.JWTToken;
 import edu.mshp.ideastore.respository.UserCrudRepository;
@@ -45,7 +46,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String authorize(String login, String password) {
-        return null;
+        List<User> users = userCrudRepository.findAllByLoginOrEmail(login, login);
+
+        if (users.size() == 0) {
+            throw new NotFoundException("User not found");
+        }
+        User user = users.get(0);
+        if (!user.comparePassword(password)) {
+            throw new BadRequestException("Password is incorrect");
+        }
+
+        JWTToken token = new JWTToken(user);
+
+        return token.createToken();
     }
 
     @Override
