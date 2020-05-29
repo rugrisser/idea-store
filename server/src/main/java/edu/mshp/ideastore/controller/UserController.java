@@ -24,6 +24,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(userService.get(id));
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> create(
             @RequestParam String login,
