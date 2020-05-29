@@ -1,6 +1,7 @@
 package edu.mshp.ideastore.service.impl;
 
 import edu.mshp.ideastore.exception.ForbiddenException;
+import edu.mshp.ideastore.exception.NotFoundException;
 import edu.mshp.ideastore.model.Post;
 import edu.mshp.ideastore.model.User;
 import edu.mshp.ideastore.module.jwt.JWTToken;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import java.security.InvalidKeyException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +34,20 @@ public class PostServiceImpl implements PostService {
         this.userService = userService;
         this.userCrudRepository = userCrudRepository;
         this.postCrudRepository = postCrudRepository;
+    }
+
+    @Override
+    public Post get(Long id) {
+        Optional<Post> postOptional = postCrudRepository.findById(id);
+        if (postOptional.isEmpty()) {
+            throw new NotFoundException("Post not found");
+        }
+        return postOptional.get();
+    }
+
+    @Override
+    public List<Post> get() {
+        return postCrudRepository.findAll();
     }
 
     @Override

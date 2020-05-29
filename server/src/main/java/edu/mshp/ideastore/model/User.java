@@ -1,5 +1,6 @@
 package edu.mshp.ideastore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mshp.ideastore.module.cypher.AESEncryptor;
 import edu.mshp.ideastore.module.cypher.IEncryptor;
 import lombok.Getter;
@@ -32,14 +33,17 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
     private String password;
 
     @CreatedDate
     @Getter
+    @JsonIgnore
     private Date created;
 
     @LastModifiedDate
     @Getter
+    @JsonIgnore
     private Date updated;
 
     public User() {

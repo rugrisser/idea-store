@@ -23,6 +23,18 @@ public class PostController {
         this.postService = postService;
     }
 
+    @GetMapping("/get")
+    public ResponseEntity get() {
+        return ResponseEntity.ok(postService.get());
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity get(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(postService.get(id));
+    }
+
     @PostMapping("/create")
     public ResponseEntity create(
             @RequestHeader("Authorization") String token,
@@ -33,7 +45,7 @@ public class PostController {
         Map<String, Object> result = new HashMap<>();
         Long id = postService.create(token, title, body, sub);
         result.put("post_id", id);
-        
+
         return ResponseEntity.ok(result);
     }
 }
