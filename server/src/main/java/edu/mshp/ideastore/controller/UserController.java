@@ -1,5 +1,6 @@
 package edu.mshp.ideastore.controller;
 
+import edu.mshp.ideastore.module.ReturnStructures;
 import edu.mshp.ideastore.service.UserService;
 import edu.mshp.ideastore.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,16 @@ public class UserController {
         result.put("token", token);
 
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity changePassword(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(name = "old") String oldPassword,
+            @RequestParam(name = "new") String newPassword
+    ) {
+        userService.changePassword(token, oldPassword, newPassword);
+        return ResponseEntity.ok(ReturnStructures.returnStatusOk());
     }
 
 }
