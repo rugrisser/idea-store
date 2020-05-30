@@ -33,7 +33,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }
 
 test {
