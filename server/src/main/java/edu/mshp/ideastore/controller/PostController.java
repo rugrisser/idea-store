@@ -1,5 +1,6 @@
 package edu.mshp.ideastore.controller;
 
+import edu.mshp.ideastore.exception.BadRequestException;
 import edu.mshp.ideastore.service.PostService;
 import edu.mshp.ideastore.service.impl.PostServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,12 @@ public class PostController {
             @RequestParam String sub
     ) {
         Map<String, Object> result = new HashMap<>();
-        Long id = postService.create(token, title, body, sub);
+        Long id = null;
+        try {
+            id = postService.create(token, title, body, sub);
+        } catch (BadRequestException badRequestException) {
+            return ResponseEntity.badRequest().body(badRequestException.getMessage());
+        }
         result.put("post_id", id);
 
         return ResponseEntity.ok(result);
