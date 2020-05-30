@@ -38,7 +38,13 @@ public class UserController {
             @RequestParam String password
     ) {
         Map<String, Object> result = new HashMap<>();
-        String token = userService.create(login, email, password);
+        String token = "";
+        try {
+            token = userService.create(login, email, password);
+        } catch (BadRequestException badRequestException) {
+            result.put("error", badRequestException.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
         result.put("token", token);
 
         return ResponseEntity.ok(result);
