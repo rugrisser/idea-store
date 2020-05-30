@@ -31,6 +31,13 @@ public class UserController {
         return ResponseEntity.ok(userService.get(id));
     }
 
+    @GetMapping
+    public ResponseEntity<?> get(
+            @RequestHeader("Authorization") String token
+    ) {
+        return ResponseEntity.ok(userService.get(token));
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> create(
             @RequestParam String login,

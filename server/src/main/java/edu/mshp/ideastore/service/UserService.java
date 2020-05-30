@@ -9,4 +9,5 @@ public interface UserService {
     public Boolean validate(String token);
     public String removeTokenPrefix(String token);
     public User get(Long id);
+    public User get(String token);
 }

@@ -2,6 +2,7 @@ package edu.mshp.ideastore.service.impl;
 
 import edu.mshp.ideastore.exception.BadRequestException;
 import edu.mshp.ideastore.exception.ForbiddenException;
+import edu.mshp.ideastore.exception.InternalServerErrorException;
 import edu.mshp.ideastore.exception.NotFoundException;
 import edu.mshp.ideastore.model.User;
 import edu.mshp.ideastore.module.jwt.JWTToken;
@@ -36,6 +37,29 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User not found");
         }
         return userOptional.get();
+    }
+
+    @Override
+    public User get(String token) {
+        if (validate(token)) {
+            token = removeTokenPrefix(token);
+            JWTToken jwtToken = null;
+            try {
+                jwtToken = new JWTToken(token);
+            } catch (BadPaddingException | IllegalBlockSizeException | InvalidKeyException e) {
+                log.error("An error occured while parsing encrypted JWT token");
+                throw new InternalServerErrorException();
+            }
+
+            Optional<User> userOptional = userCrudRepository.findById(jwtToken.getId());
+            if (userOptional.isEmpty()) {
+                log.error("User with ID {} not found", jwtToken.getId());
+                throw new InternalServerErrorException();
+            }
+            return userOptional.get();
+        } else {
+            throw new BadRequestException("Token is invalid");
+        }
     }
 
     @Override
